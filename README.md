@@ -1,5 +1,5 @@
 # Welcome to Cook Smart
-# Cook Smart
+
 
 ## Inspiration
 You know that feeling when you stare into your fridge like it’s gonna magically tell you what to make? That’s the problem. Everyone's busy, and decision fatigue is real. We wanted to create something that takes the mental load off and makes cooking fun and easy again.
