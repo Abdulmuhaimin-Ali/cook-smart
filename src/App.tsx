@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import MealGenerator from "./pages/MealGenerator";
 import Inventory from "./pages/Inventory";
 import Stats from "./pages/Stats";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/meal-generator" element={<MealGenerator />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
