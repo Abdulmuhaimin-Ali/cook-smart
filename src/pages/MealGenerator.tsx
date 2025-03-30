@@ -132,7 +132,7 @@ const MealGenerator = () => {
                 <SelectValue placeholder="Select cuisine" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any Cuisine</SelectItem>
+                <SelectItem value="any">Any Cuisine</SelectItem>
                 {cuisineOptions.map(cuisine => (
                   <SelectItem key={cuisine} value={cuisine.toLowerCase()}>
                     {cuisine}
