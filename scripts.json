@@ -1,0 +1,5 @@
+
+{
+  "test": "jest",
+  "test:watch": "jest --watch"
+}
