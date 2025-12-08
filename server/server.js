@@ -44,6 +44,18 @@ app.get("/recipeStream", (req, res) => {
 
   // testing doc generation prompt
   const prompt = [];
+  const prompt1 = `
+  Generate a meal based on the following preferences:
+  Meal Type: ${mealType}
+  Cuisine: ${cuisine}
+  Dietary Concerns: ${dietConcerns}
+  Cooking Time: ${cookingTime} minutes
+  Servings: ${servings}
+  Target Calories per Serving: ${targetCalories}
+  
+  Provide a title, a list of ingredients, and step-by-step instructions. Format the output clearly.
+
+  `;
 
   prompt.push("Generate a meal based on the following preferences:");
   prompt.push(`Meal Type: ${mealType}`);
