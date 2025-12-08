@@ -42,9 +42,9 @@ app.get("/recipeStream", (req, res) => {
     }
   };
 
-  // testing doc generation prompt
-  const prompt = [];
+  // added changes
 
+  const prompt = [];
   prompt.push("Generate a meal based on the following preferences:");
   prompt.push(`Meal Type: ${mealType}`);
   prompt.push(`Cuisine: ${cuisine}`);
