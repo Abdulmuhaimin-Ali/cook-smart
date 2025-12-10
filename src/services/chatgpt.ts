@@ -4,7 +4,7 @@ export interface ChatCompletionMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
-// demo
+
 export interface ChatCompletionOptions {
   model: string;
   messages: ChatCompletionMessage[];
