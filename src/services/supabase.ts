@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-
+// demo
 // Get these from your Supabase project settings or use default placeholders
 const supabaseUrl = localStorage.getItem('supabaseUrl') || '';
 const supabaseKey = localStorage.getItem('supabaseKey') || '';
