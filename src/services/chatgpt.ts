@@ -11,7 +11,7 @@ export interface ChatCompletionOptions {
   temperature?: number;
   max_tokens?: number;
 }
-
+// demo
 export interface ChatCompletionResponse {
   id: string;
   object: string;

@@ -49,7 +49,7 @@ export const supabase = (() => {
         Promise.resolve({ error: new Error("Supabase not configured") }),
     },
     // Add other commonly used methods as needed
-  };
+  }; // demo
 })();
 //demo
 // Function to save Supabase credentials to localStorage
