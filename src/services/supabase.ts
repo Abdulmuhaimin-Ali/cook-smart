@@ -33,7 +33,7 @@ export const supabase = (() => {
           data: null,
           error: new Error("Supabase not configured"),
         }),
-    }),
+    }), // more testting
     auth: {
       signUp: () =>
         Promise.resolve({
