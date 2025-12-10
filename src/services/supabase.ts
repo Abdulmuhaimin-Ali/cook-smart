@@ -9,7 +9,7 @@ export const supabase = (() => {
   // Check if both URL and key are available before creating client
   if (supabaseUrl && supabaseKey) {
     return createClient(supabaseUrl, supabaseKey);
-  }// More testing // more  testing
+  } // More testing // more  testing
   // Return a dummy client with methods that do nothing when credentials aren't set
   return {
     from: () => ({
@@ -66,3 +66,5 @@ export const isSupabaseConfigured = () => {
     !!localStorage.getItem("supabaseKey")
   );
 };
+
+// more testing
