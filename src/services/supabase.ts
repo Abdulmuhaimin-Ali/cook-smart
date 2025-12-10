@@ -58,7 +58,7 @@ export const saveSupabaseCredentials = (url: string, key: string) => {
   localStorage.setItem("supabaseKey", key);
   return createClient(url, key);
 };
-
+// demo
 // Check if Supabase is configured
 export const isSupabaseConfigured = () => {
   return (
