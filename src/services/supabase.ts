@@ -71,3 +71,4 @@ export const isSupabaseConfigured = () => {
 // // more testing, i need to figure out how to test this withouth having to push code every single time
 // but i am extermeley happy that i'm actually sitting here working on something that 
 // might benefit a lot of people.
+// more testing
