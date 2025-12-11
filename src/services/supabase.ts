@@ -9,7 +9,7 @@ export const supabase = (() => {
   // Check if both URL and key are available before creating client
   if (supabaseUrl && supabaseKey) {
     return createClient(supabaseUrl, supabaseKey);
-  } // More testing // more  testing
+  }
   // Return a dummy client with methods that do nothing when credentials aren't set
   return {
     from: () => ({
@@ -33,7 +33,7 @@ export const supabase = (() => {
           data: null,
           error: new Error("Supabase not configured"),
         }),
-    }), // more testting // more testing // more testing
+    }),
     auth: {
       signUp: () =>
         Promise.resolve({
@@ -49,7 +49,7 @@ export const supabase = (() => {
         Promise.resolve({ error: new Error("Supabase not configured") }),
     },
     // Add other commonly used methods as needed
-  }; // demo
+  };
 })();
 //demo
 // Function to save Supabase credentials to localStorage
@@ -58,7 +58,7 @@ export const saveSupabaseCredentials = (url: string, key: string) => {
   localStorage.setItem("supabaseKey", key);
   return createClient(url, key);
 };
-// demo
+
 // Check if Supabase is configured
 export const isSupabaseConfigured = () => {
   return (
@@ -66,10 +66,3 @@ export const isSupabaseConfigured = () => {
     !!localStorage.getItem("supabaseKey")
   );
 };
-
-// more testing
-// // more testing, i need to figure out how to test this withouth having to push code every single time
-// but i am extermeley happy that i'm actually sitting here working on something that
-// might benefit a lot of people.
-// more testing
-// more testing
