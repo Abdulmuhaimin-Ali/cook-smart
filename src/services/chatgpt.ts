@@ -86,3 +86,5 @@ export const chatGPTService = new ChatGPTService();
 
 // more testing
 // does synchronize trigger logic?
+// test sync again
+// testing consecutive request bug
