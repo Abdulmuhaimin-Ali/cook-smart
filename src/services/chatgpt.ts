@@ -10,7 +10,7 @@ export interface ChatCompletionOptions {
   temperature?: number;
   max_tokens?: number;
 }
-// demo // more testing
+
 export interface ChatCompletionResponse {
   id: string;
   object: string;
@@ -86,5 +86,3 @@ export const chatGPTService = new ChatGPTService();
 
 // more testing
 // does synchronize trigger logic?
-// test sync again
-// testing consecutive request bug
