@@ -6,16 +6,12 @@ import { Scan, List, BarChart, FileText } from 'lucide-react';
 
 const TabNavigation = () => {
   const location = useLocation();
-
+  
   const tabs = [
-    { path: "/", icon: <Scan size={24} />, label: "Scan" },
-    {
-      path: "/meal-generator",
-      icon: <FileText size={24} />,
-      label: "Generate",
-    },
-    { path: "/inventory", icon: <List size={24} />, label: "Inventory" },
-    { path: "/stats", icon: <BarChart size={24} />, label: "Stats" },
+    { path: '/', icon: <Scan size={24} />, label: 'Scan' },
+    { path: '/meal-generator', icon: <FileText size={24} />, label: 'Generate' },
+    { path: '/inventory', icon: <List size={24} />, label: 'Inventory' },
+    { path: '/stats', icon: <BarChart size={24} />, label: 'Stats' },
   ];
 
   return (
@@ -29,8 +25,8 @@ const TabNavigation = () => {
               to={tab.path}
               className={cn(
                 "flex flex-col items-center p-2 w-1/4 transition-colors",
-                isActive
-                  ? "text-primary"
+                isActive 
+                  ? "text-primary" 
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
