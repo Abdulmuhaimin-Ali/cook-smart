@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
-import Layout from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
+
+import React, { useState, useEffect } from 'react';
+import Layout from '@/components/layout/Layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -17,16 +18,15 @@ import {
   DialogTrigger,
   DialogFooter,
   DialogClose,
-} from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Plus, Trash, Utensils } from "lucide-react";
+} from '@/components/ui/dialog';
 import {
-  getInventory,
-  saveInventory,
-  InventoryItem,
-} from "@/utils/localStorage";
-import { toast } from "@/components/ui/use-toast";
+  Card,
+  CardContent,
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Plus, Trash, Utensils } from 'lucide-react';
+import { getInventory, saveInventory, InventoryItem } from '@/utils/localStorage';
+import { toast } from '@/components/ui/use-toast';
 
 const foodCategories = [
   "Produce",
@@ -39,16 +39,14 @@ const foodCategories = [
   "Snacks",
   "Beverages",
   "Baking",
-  "Other",
+  "Other"
 ];
 
 const Inventory = () => {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [filter, setFilter] = useState("");
   const [showAdd, setShowAdd] = useState(false);
-  const [newItem, setNewItem] = useState<
-    Omit<InventoryItem, "id" | "dateAdded">
-  >({
+  const [newItem, setNewItem] = useState<Omit<InventoryItem, "id" | "dateAdded">>({
     name: "",
     quantity: 1,
     unit: "item",
@@ -61,9 +59,8 @@ const Inventory = () => {
   }, []);
 
   const filteredInventory = filter
-    ? inventory.filter(
-        (item) => item.category.toLowerCase() === filter.toLowerCase()
-      )
+    ? inventory.filter(item => 
+        item.category.toLowerCase() === filter.toLowerCase())
     : inventory;
 
   const handleSaveItem = () => {
@@ -85,42 +82,43 @@ const Inventory = () => {
     const updatedInventory = [...inventory, itemToAdd];
     setInventory(updatedInventory);
     saveInventory(updatedInventory);
-
+    
     toast({
       title: "Item Added",
       description: `${newItem.name} has been added to your inventory.`,
     });
-
+    
     setNewItem({
       name: "",
       quantity: 1,
       unit: "item",
       category: "Other",
     });
-
+    
     setShowAdd(false);
   };
 
   const handleDeleteItem = (id: string) => {
-    const updatedInventory = inventory.filter((item) => item.id !== id);
+    const updatedInventory = inventory.filter(item => item.id !== id);
     setInventory(updatedInventory);
     saveInventory(updatedInventory);
-
+    
     toast({
       title: "Item Removed",
       description: "The item has been removed from your inventory.",
     });
   };
 
-  const groupedInventory = filteredInventory.reduce<
-    Record<string, InventoryItem[]>
-  >((groups, item) => {
-    if (!groups[item.category]) {
-      groups[item.category] = [];
-    }
-    groups[item.category].push(item);
-    return groups;
-  }, {});
+  const groupedInventory = filteredInventory.reduce<Record<string, InventoryItem[]>>(
+    (groups, item) => {
+      if (!groups[item.category]) {
+        groups[item.category] = [];
+      }
+      groups[item.category].push(item);
+      return groups;
+    },
+    {}
+  );
 
   return (
     <Layout>
@@ -130,15 +128,18 @@ const Inventory = () => {
           <Plus className="mr-1 h-4 w-4" /> Add Item
         </Button>
       </div>
-
+      
       <div className="mb-6">
-        <Select value={filter} onValueChange={setFilter}>
+        <Select 
+          value={filter} 
+          onValueChange={setFilter}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {foodCategories.map((category) => (
+            {foodCategories.map(category => (
               <SelectItem key={category} value={category}>
                 {category}
               </SelectItem>
@@ -146,7 +147,7 @@ const Inventory = () => {
           </SelectContent>
         </Select>
       </div>
-
+      
       {inventory.length === 0 ? (
         <div className="text-center py-12">
           <Utensils className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
@@ -164,17 +165,14 @@ const Inventory = () => {
             <div key={category}>
               <h2 className="font-medium text-lg mb-2">{category}</h2>
               <div className="space-y-2">
-                {items.map((item) => (
+                {items.map(item => (
                   <Card key={item.id}>
                     <CardContent className="p-4 flex justify-between items-center">
                       <div>
                         <h3 className="font-medium">{item.name}</h3>
                         <div className="text-sm text-muted-foreground">
                           {item.quantity} {item.unit}
-                          {item.expiryDate &&
-                            ` • Expires: ${new Date(
-                              item.expiryDate
-                            ).toLocaleDateString()}`}
+                          {item.expiryDate && ` • Expires: ${new Date(item.expiryDate).toLocaleDateString()}`}
                         </div>
                       </div>
                       <Button
@@ -192,51 +190,42 @@ const Inventory = () => {
           ))}
         </div>
       )}
-
+      
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Inventory Item</DialogTitle>
           </DialogHeader>
-
+          
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="name">Item Name</Label>
-              <Input
+              <Input 
                 id="name"
                 value={newItem.name}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, name: e.target.value })
-                }
+                onChange={e => setNewItem({...newItem, name: e.target.value})}
                 placeholder="e.g., Chicken Breast"
               />
             </div>
-
+            
             <div className="flex gap-4">
               <div className="space-y-2 flex-1">
                 <Label htmlFor="quantity">Quantity</Label>
-                <Input
+                <Input 
                   id="quantity"
                   type="number"
                   min="0"
                   step="0.1"
                   value={newItem.quantity}
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      quantity: parseFloat(e.target.value) || 0,
-                    })
-                  }
+                  onChange={e => setNewItem({...newItem, quantity: parseFloat(e.target.value) || 0})}
                 />
               </div>
-
+              
               <div className="space-y-2 flex-1">
                 <Label htmlFor="unit">Unit</Label>
-                <Select
+                <Select 
                   value={newItem.unit}
-                  onValueChange={(value) =>
-                    setNewItem({ ...newItem, unit: value })
-                  }
+                  onValueChange={value => setNewItem({...newItem, unit: value})}
                 >
                   <SelectTrigger id="unit">
                     <SelectValue placeholder="Select unit" />
@@ -256,20 +245,18 @@ const Inventory = () => {
                 </Select>
               </div>
             </div>
-
+            
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select
+              <Select 
                 value={newItem.category}
-                onValueChange={(value) =>
-                  setNewItem({ ...newItem, category: value })
-                }
+                onValueChange={value => setNewItem({...newItem, category: value})}
               >
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {foodCategories.map((category) => (
+                  {foodCategories.map(category => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -277,20 +264,18 @@ const Inventory = () => {
                 </SelectContent>
               </Select>
             </div>
-
+            
             <div className="space-y-2">
               <Label htmlFor="expiryDate">Expiry Date (Optional)</Label>
-              <Input
+              <Input 
                 id="expiryDate"
                 type="date"
-                value={newItem.expiryDate || ""}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, expiryDate: e.target.value })
-                }
+                value={newItem.expiryDate || ''}
+                onChange={e => setNewItem({...newItem, expiryDate: e.target.value})}
               />
             </div>
           </div>
-
+          
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
@@ -304,5 +289,3 @@ const Inventory = () => {
 };
 
 export default Inventory;
-
-// demo
