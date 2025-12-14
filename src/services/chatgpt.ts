@@ -84,5 +84,3 @@ class ChatGPTService {
 // Export a singleton instance
 export const chatGPTService = new ChatGPTService();
 
-// more testing
-// does synchronize trigger logic?
