@@ -23,7 +23,9 @@ const Index = () => {
         'Brown Rice (1kg)',
         'Broccoli (300g)',
         'Olive Oil (500ml)',
-        'Sweet Potatoes (1kg)'
+        'Sweet Potatoes (1kg)',
+        'Apples (2)',
+        'Peanuts (200g)'
       ];
       setScannedItems(mockItems);
       toast({
