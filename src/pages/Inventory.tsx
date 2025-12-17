@@ -306,3 +306,4 @@ const Inventory = () => {
 export default Inventory;
 
 // demo
+// demo
