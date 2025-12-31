@@ -1,38 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  saveSupabaseCredentials,
-  isSupabaseConfigured,
-} from "@/services/supabase";
-import { chatGPTService } from "@/services/chatgpt";
-import { toast } from "@/components/ui/use-toast";
-// demo
+
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { saveSupabaseCredentials, isSupabaseConfigured } from '@/services/supabase';
+import { chatGPTService } from '@/services/chatgpt';
+import { toast } from '@/components/ui/use-toast';
+
 const ApiKeySettings = () => {
-  const [supabaseUrl, setSupabaseUrl] = useState("");
-  const [supabaseKey, setSupabaseKey] = useState("");
-  const [chatGptKey, setChatGptKey] = useState("");
-  // demo
+  const [supabaseUrl, setSupabaseUrl] = useState('');
+  const [supabaseKey, setSupabaseKey] = useState('');
+  const [chatGptKey, setChatGptKey] = useState('');
+  
   // Check for existing configuration
   useEffect(() => {
-    const existingSupabaseUrl = localStorage.getItem("supabaseUrl") || "";
-    const existingSupabaseKey = localStorage.getItem("supabaseKey") || "";
+    const existingSupabaseUrl = localStorage.getItem('supabaseUrl') || '';
+    const existingSupabaseKey = localStorage.getItem('supabaseKey') || '';
     const existingChatGptKey = chatGPTService.getApiKey();
-
+    
     setSupabaseUrl(existingSupabaseUrl);
     setSupabaseKey(existingSupabaseKey);
     setChatGptKey(existingChatGptKey);
   }, []);
-
+  
   const handleSaveSupabase = () => {
     if (!supabaseUrl || !supabaseKey) {
       toast({
@@ -42,14 +33,14 @@ const ApiKeySettings = () => {
       });
       return;
     }
-
+    
     saveSupabaseCredentials(supabaseUrl, supabaseKey);
     toast({
       title: "Supabase Configured",
       description: "Your Supabase credentials have been saved",
     });
   };
-
+  
   const handleSaveChatGpt = () => {
     if (!chatGptKey) {
       toast({
@@ -59,14 +50,14 @@ const ApiKeySettings = () => {
       });
       return;
     }
-
+    
     chatGPTService.saveApiKey(chatGptKey);
     toast({
       title: "ChatGPT API Configured",
       description: "Your ChatGPT API key has been saved",
     });
   };
-
+  
   return (
     <div className="space-y-6">
       <Card>
@@ -103,13 +94,11 @@ const ApiKeySettings = () => {
         </CardContent>
         <CardFooter>
           <Button onClick={handleSaveSupabase}>
-            {isSupabaseConfigured()
-              ? "Update Supabase Settings"
-              : "Save Supabase Settings"}
+            {isSupabaseConfigured() ? 'Update Supabase Settings' : 'Save Supabase Settings'}
           </Button>
         </CardFooter>
       </Card>
-
+      
       <Card>
         <CardHeader>
           <CardTitle>ChatGPT API Configuration</CardTitle>
@@ -134,9 +123,7 @@ const ApiKeySettings = () => {
         </CardContent>
         <CardFooter>
           <Button onClick={handleSaveChatGpt}>
-            {chatGPTService.isConfigured()
-              ? "Update ChatGPT API Key"
-              : "Save ChatGPT API Key"}
+            {chatGPTService.isConfigured() ? 'Update ChatGPT API Key' : 'Save ChatGPT API Key'}
           </Button>
         </CardFooter>
       </Card>
