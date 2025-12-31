@@ -66,5 +66,3 @@ export const isSupabaseConfigured = () => {
     !!localStorage.getItem("supabaseKey")
   );
 };
-
-// demo
