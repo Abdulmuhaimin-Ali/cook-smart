@@ -83,5 +83,3 @@ class ChatGPTService {
 
 // Export a singleton instance
 export const chatGPTService = new ChatGPTService();
-
-// demo

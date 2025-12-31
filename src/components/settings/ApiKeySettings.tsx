@@ -16,7 +16,7 @@ import {
 } from "@/services/supabase";
 import { chatGPTService } from "@/services/chatgpt";
 import { toast } from "@/components/ui/use-toast";
-
+// demo
 const ApiKeySettings = () => {
   const [supabaseUrl, setSupabaseUrl] = useState("");
   const [supabaseKey, setSupabaseKey] = useState("");
