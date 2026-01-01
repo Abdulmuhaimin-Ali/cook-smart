@@ -1,123 +1,123 @@
 ## Purpose & Overview
 
-The `server/server.js` file implements a simple web server using Node.js and Express.js. The primary purpose of this server is to act as a backend for an application that generates recipe suggestions based on user-defined preferences.  It leverages the OpenAI API (specifically the chat completions endpoint with streaming functionality) to generate the recipe content and streams the response back to the client in real-time using Server-Sent Events (SSE). The server receives recipe parameters via query parameters, constructs a prompt for the OpenAI API, and relays the response data to the client for display.
+This `server.js` file implements a simple Express.js server that acts as a proxy to generate recipes based on user preferences using the OpenAI API. It exposes a single endpoint, `/recipeStream`, which receives meal preferences as query parameters and streams the generated recipe back to the client using Server-Sent Events (SSE).  This allows the client to display the recipe in real-time as it's being created.
 
 ## Key Functions/Components
 
-*   **Express.js Server:** Handles HTTP requests and responses.
-*   **`/recipeStream` Endpoint:**  The core endpoint that receives recipe preferences, interacts with the OpenAI API, and streams the generated recipe back to the client.
-*   **`fetchOpenAiCompletionStream` Function:**  Handles the communication with the OpenAI API, including authentication, request construction, and streaming the response chunks.
-*   **Server-Sent Events (SSE):**  The mechanism used to stream the recipe content to the client in real-time.
-*   **Environment Variables:** Uses `.env` file to store sensitive information like the OpenAI API key.
+*   **Express.js Server:** The core of the application, handling HTTP requests and routing.
+*   **`/recipeStream` Endpoint:** Accepts recipe generation requests, constructs a prompt for the OpenAI API based on the query parameters, and streams the response back to the client.
+*   **`fetchOpenAiCompletionStream` Function:** Handles communication with the OpenAI API, sending the prompt and streaming the response back to the `/recipeStream` endpoint for delivery to the client.
+*   **Server-Sent Events (SSE):**  Used to stream the recipe generation response back to the client in real-time.
+*   **OpenAI API Integration:**  Utilizes the `openai` Node.js library to interact with the OpenAI API for text generation.
 
 ## Business Logic (if applicable)
 
-The "business logic" of this server can be broken down as follows:
+The primary business logic revolves around generating a prompt for the OpenAI API based on user preferences and formatting the streaming response for delivery to the client. This involves:
 
-1.  **Request Processing:** Receives a request to the `/recipeStream` endpoint containing recipe preferences (meal type, cuisine, dietary concerns, cooking time, servings, target calories) as query parameters.
-
-2.  **Prompt Construction:**  Constructs a prompt for the OpenAI API based on the user's preferences.  The prompt includes instructions to generate a meal with specific instructions regarding the desired format of the response(title, ingredients, instructions).
-
-3.  **OpenAI Interaction:** Calls the `fetchOpenAiCompletionStream` function to send the prompt to the OpenAI API and initiates the streaming of the API's response.
-
-4.  **Response Streaming:** As the OpenAI API generates the recipe in chunks, the `fetchOpenAiCompletionStream` function calls the provided callback (`sendEvent`). The callback function formats these chunks into SSE data events and sends them to the client.  It signals the end of the stream when the OpenAI gives a `stop` reason.
-
-5.  **Client Disconnection Handling:** Handles client disconnections by closing the SSE connection and terminating the OpenAI stream.
+1.  **Receiving User Preferences:** Extracting meal type, cuisine, dietary concerns, cooking time, servings, and target calories from the request query parameters.
+2.  **Constructing the Prompt:** Building a detailed prompt by combining the user preferences into a coherent instruction set for the OpenAI API.  The prompt requests a specific format output including title, ingredients, and instructions.
+3.  **Streaming the Response:**  Using the `openai.chat.completions.create` method with `stream: true` to receive a stream of text chunks from the OpenAI API.
+4.  **Formatting and Sending SSE:** Transforming each chunk from the OpenAI API into a Server-Sent Event. JSON objects are sent to the client indicating the start of the stream, individual data chunks, and the completion of the stream.
 
 ## Input/Output Specifications
 
-**Input (for `/recipeStream` endpoint):**
+**Endpoint:** `/recipeStream`
 
-*   **HTTP Method:** GET
-*   **Query Parameters:**
-    *   `mealType` (string): Type of meal (e.g., Breakfast, Lunch, Dinner).
-    *   `cuisine` (string): Cuisine preference (e.g., Italian, Mexican, Indian).
-    *   `dietConcerns` (string): Dietary restrictions/concerns (e.g., Vegetarian, Vegan, Gluten-Free).
-    *   `cookingTime` (string): Maximum cooking time in minutes.
-    *   `servings` (string): Number of servings.
-    *   `targetCalories` (string): Target calories per serving.
+**Method:** `GET`
 
-**Output (for `/recipeStream` endpoint):**
+**Input (Query Parameters):**
 
-*   **HTTP Status Code:** 200 OK
-*   **Content Type:** `text/event-stream`
-*   **Data Format:** Server-Sent Events (SSE)
-    *   Each SSE event contains a `data` field with a JSON object.
-    *   The JSON object has an `action` field and potentially a `chunk` field:
-        *   `{ action: "start" }`: Indicates the beginning of the response from the OpenAI API. This is usually accompanied by the AI role
-        *   `{ action: "chunk", chunk: "..." }`: Contains a partial piece of the generated recipe content. The `chunk` field is a string.
-        *   `{ action: "close" }`: Indicates the end of the response from the OpenAI API.
+*   `mealType` (string): Type of meal (e.g., breakfast, lunch, dinner).
+*   `cuisine` (string): Desired cuisine (e.g., Italian, Mexican, Indian).
+*   `dietConcerns` (string): Dietary restrictions or preferences (e.g., vegetarian, gluten-free, vegan, low-carb).
+*   `cookingTime` (number): Maximum cooking time in minutes.
+*   `servings` (number): Number of servings desired.
+*   `targetCalories` (number): Target calorie count per serving.
 
-**Example SSE Data Stream:**
+**Output (Server-Sent Events):**
+
+The server sends a stream of SSE messages with the following format:
+
+*   `data: {"action": "start"}`: Indicates the beginning of the response.  This is usually the first event.
+*   `data: {"action": "chunk", "chunk": "text chunk"}`: Contains a portion of the generated recipe text.  This will be sent repeatedly until the recipe has been fully generated.
+*   `data: {"action": "close"}`: Signals the end of the response stream.
+
+**Example:**
+
+Request:
 
 ```
-data: {"action":"start"}
+GET /recipeStream?mealType=dinner&cuisine=Italian&dietConcerns=vegetarian&cookingTime=30&servings=2&targetCalories=500
+```
 
-data: {"action":"chunk", "chunk": "Okay, here's"}
+Response (SSE Stream):
 
-data: {"action":"chunk", "chunk": " a recipe"}
+```
+data: {"action": "start"}
 
-data: {"action":"chunk", "chunk": " for you"}
+data: {"action": "chunk", "chunk": "Title: Vegetarian Pasta Primavera"}
 
-data: {"action":"close"}
+data: {"action": "chunk", "chunk": "\n\nIngredients:"}
+
+data: {"action": "chunk", "chunk": "\n- 8 oz pasta"}
+
+...
+
+data: {"action": "close"}
 ```
 
 ## Usage Examples
 
-1.  **Starting the Server:**
+To use this server, send a GET request to the `/recipeStream` endpoint with the desired query parameters.  A JavaScript `EventSource` can be used on the client-side to listen for the SSE stream.
 
-    ```bash
-    node server/server.js
-    ```
+**Example Client-Side JavaScript:**
 
-2.  **Making a Request (example using `curl`):**
+```javascript
+const eventSource = new EventSource('http://localhost:3001/recipeStream?mealType=dinner&cuisine=Italian&dietConcerns=vegetarian&cookingTime=30&servings=2&targetCalories=500');
 
-    ```bash
-    curl "http://localhost:3001/recipeStream?mealType=Dinner&cuisine=Italian&dietConcerns=Vegetarian&cookingTime=30&servings=2&targetCalories=500" --header "Accept: text/event-stream"
-    ```
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.action === 'start') {
+    console.log('Recipe generation started...');
+  } else if (data.action === 'chunk') {
+    console.log(data.chunk); // Append this to your UI
+  } else if (data.action === 'close') {
+    console.log('Recipe generation complete.');
+    eventSource.close();
+  }
+};
 
-    This `curl` command sends a request to the `/recipeStream` endpoint with specific recipe preferences.  The `--header "Accept: text/event-stream"` is important for the client to indicate it expects an SSE stream.
-
-3.  **Client-Side Handling (Conceptual):**
-
-    A client-side JavaScript application would use the `EventSource` API to connect to the `/recipeStream` endpoint and listen for SSE events.  The client would then parse the JSON data in each event and update the user interface accordingly.
-
-    ```javascript
-    const eventSource = new EventSource('http://localhost:3001/recipeStream?mealType=Dinner&cuisine=Italian&dietConcerns=Vegetarian&cookingTime=30&servings=2&targetCalories=500');
-
-    eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.action === 'start') {
-            console.log("Starting recipe generation");
-        } else if (data.action === 'chunk') {
-            // Append the received chunk to the UI
-            console.log("Recipe Chunk: " + data.chunk);
-        } else if (data.action === 'close') {
-            console.log("Recipe generation complete!");
-            eventSource.close(); // Close the connection
-        }
-    };
-
-    eventSource.onerror = (error) => {
-        console.error("EventSource error:", error);
-        eventSource.close();
-    };
-    ```
+eventSource.onerror = (error) => {
+  console.error('EventSource failed:', error);
+  eventSource.close();
+};
+```
 
 ## Dependencies
 
-*   **express:** Web framework for Node.js.  `npm install express`
-*   **cors:** Middleware for enabling Cross-Origin Resource Sharing. `npm install cors`
-*   **openai:**  Node.js library for interacting with the OpenAI API.  `npm install openai`
-*   **dotenv:**  Loads environment variables from a `.env` file.  `npm install dotenv`
+*   **express:**  For creating the web server and handling requests.
+*   **cors:** For enabling Cross-Origin Resource Sharing (CORS) to allow requests from different origins.
+*   **openai:** For interacting with the OpenAI API.
+*   **dotenv:** For loading environment variables from a `.env` file.
+
+You can install these dependencies using npm:
+
+```bash
+npm install express cors openai dotenv
+```
 
 ## Important Notes
 
-*   **API Key Security:**  The OpenAI API key should be stored securely as an environment variable and **never** committed directly to the codebase. Use a `.env` file (as shown) and ensure it's excluded from version control (e.g., by adding it to `.gitignore`).
-*   **Error Handling:** The code includes basic error handling within the `fetchOpenAiCompletionStream` function.  More robust error handling should be implemented for production use, including handling network errors, API errors, and invalid input.
-*   **Rate Limiting:** The OpenAI API has rate limits.  The code doesn't currently implement any rate limiting or retry mechanisms. Consider adding these to improve the reliability and resilience of the server.
-*   **Prompt Engineering:** The quality of the generated recipes depends heavily on the prompt provided to the OpenAI API.  Experiment with different prompt formulations to optimize the results.
-*   **SSE Connection Management:**  The code currently only handles client disconnections. More robust SSE connection management might be required for production to handle network interruptions and ensure that the stream is properly closed in all cases.
-*   **OpenAI Model:** The code uses `"gpt-4o-mini"`. Always use a valid model and monitor its usage and cost. Model names should be configurable using environment variables.
-*   **CORS Configuration:** The current `cors()` setup is very permissive. For a production environment, carefully configure CORS to only allow requests from authorized origins.
-*   **Input Sanitization:** It is important to sanitize and validate user inputs (query parameters) to prevent potential security vulnerabilities and ensure the prompt construction is safe and effective.
+*   **OpenAI API Key:**  The OpenAI API key must be set as an environment variable named `OPENAI_API_KEY`. Create a `.env` file in the root directory of the project and add the following line:
+
+    ```
+    OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+    ```
+
+    Replace `YOUR_OPENAI_API_KEY` with your actual OpenAI API key.
+*   **Error Handling:** The current error handling in `fetchOpenAiCompletionStream` only logs the error to the console. More robust error handling, such as sending an error event to the client, should be implemented.
+*   **Rate Limiting:**  The OpenAI API has rate limits.  Consider implementing rate limiting on the server-side to prevent exceeding these limits.
+*   **Model Selection:** The `aiModel` variable is set to `"gpt-4o-mini"`. You can change this to other models based on your needs, but ensure that the model supports streaming.
+*   **Prompt Engineering:** The quality of the generated recipes depends heavily on the prompt. Experiment with different prompts to achieve the desired results. Further refinement might be necessary to improve the structure and accuracy of the output.
+*   The output of OpenAI is non-deterministic.  The recipe generated for the same inputs might vary each time.
+*   Security:  Sanitize user input to prevent prompt injection attacks.
