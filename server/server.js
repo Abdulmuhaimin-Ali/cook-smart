@@ -75,7 +75,7 @@ async function fetchOpenAiCompletionStream(messages, callback) {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-  const aiModel = "gpt-4o-mini";
+  const aiModel = "gpt-5-mini";
 
   try {
     const completion = await openai.chat.completions.create({
@@ -95,3 +95,4 @@ async function fetchOpenAiCompletionStream(messages, callback) {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+// demo
