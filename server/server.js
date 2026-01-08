@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 const express = require("express");
 const cors = require("cors");
 const OpenAI = require("openai");
@@ -102,4 +95,5 @@ async function fetchOpenAiCompletionStream(messages, callback) {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 // demo
