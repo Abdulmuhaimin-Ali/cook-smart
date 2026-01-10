@@ -95,5 +95,3 @@ async function fetchOpenAiCompletionStream(messages, callback) {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-// demo 
