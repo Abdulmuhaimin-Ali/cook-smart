@@ -130,4 +130,4 @@ The client receives a stream of events structured as described in the Input/Outp
 *   **Resource Management:**  The `req.on('close', ...)` code is crucial.  Without it, the SSE stream can remain open indefinitely, leading to resource leaks.
 *   **Client Timeout:**  Consider implementing a timeout on the client-side to handle cases where the server becomes unresponsive.
 
-```
+
