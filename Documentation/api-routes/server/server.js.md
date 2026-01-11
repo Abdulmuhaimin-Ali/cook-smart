@@ -5,8 +5,8 @@ This `server.js` file creates an Express server that exposes a single API endpoi
 
 ## Key Functions/Components
 
-*   **`express()`:**  The core Express framework instance for creating the web server.
-*   **`cors()`:** Middleware for enabling Cross-Origin Resource Sharing (CORS), allowing requests from different origins (e.g., a frontend running on a different port).
+   **`express()`:**  The core Express framework instance for creating the web server.
+   **`cors()`:** Middleware for enabling Cross-Origin Resource Sharing (CORS), allowing requests from different origins (e.g., a frontend running on a different port).
 *   **`OpenAI`:**  The OpenAI library for interacting with the OpenAI API.
 *   **`dotenv.config()`:**  Loads environment variables from a `.env` file.
 *   **`/recipeStream` endpoint:**
